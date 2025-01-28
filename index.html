@@ -5,18 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BxD Blog Search</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
     <h1>Business x Design Blog Search</h1>
     <div class="search-container">
-        <input type="text" id="search-input" placeholder="Search blog posts...">
+        <div style="display: flex; gap: 10px;"><input type="text" id="search-input" placeholder="Search blog posts..."><button type="submit" id="search-button">Search</button></div>
     </div>
     <div id="results">
-        <div class="blog-post" onclick="window.location.href='https://google.com'">
-            <img src="comingsoon.jpg" alt="Blog post thumbnail">
-            <h2 class="post-title">Blog Post Title</h2>
-        </div>
         <!-- Search results will appear here -->
     </div>
 </body>
