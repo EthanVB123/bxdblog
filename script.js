@@ -1,3 +1,15 @@
+async function search() { // Perform a semantic search on the blog posts
+    const query = document.getElementById('search-input').value;
+    try {
+        const response = await fetch(`http://127.0.0.1:5000/callSearch?query=${encodeURIComponent(query)}`);
+        const result = await response.json();
+        console.log("Output from Python:", result.output);
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
+
 function createBlogPost(title, imageUrl, postUrl) {
     // Create main container
     const blogPost = document.createElement('div');
