@@ -7,4 +7,13 @@ Note: scraper.py is very scrappy and not to be ran - it was just used to scrape 
 You need the following:
 Python 3.10+
 The following python packages:
-- TODO
+- sentence_transformers
+- faiss-cpu
+- flask
+- numpy
+
+Use the following command to run the server:
+```
+flask --app semanticSearch.py run   
+```
+

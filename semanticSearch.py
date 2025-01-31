@@ -3,18 +3,14 @@
 from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
-from flask import Flask, jsonify, request
-from flask_cors import CORS # this will be removed later - allows requests from frontend, as they are different sources atm
-print("start of code")
+from flask import Flask, jsonify, request, render_template
+
 # start flask app
 app = Flask(__name__)
-CORS(app) # *** REMOVE FOR PRODUCTION THIS IS A SECURITY RISK *** (it makes ddos really easy)
 # Load the model
 model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
-
 datafile = "blogTitlesAndLinks.txt" #note this is hand-cleaned
-
 
 blogPosts = {} # title : url
 with open(datafile, "r") as blogs:
@@ -22,7 +18,6 @@ with open(datafile, "r") as blogs:
     for i in range(0, len(text), 2):
         blogPosts[text[i]] = text[i+1]
 blogTitles = list(blogPosts)
-
 
 #Create embeddings
 embeddings = model.encode(blogTitles, convert_to_numpy=True)
@@ -50,7 +45,13 @@ query = "manage work life balance"
 results = search(query)
 print("Search Results:", results)
 
-# Create flask route
+
+# Load the homepage
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+# Used by frontend to call search
 @app.route('/callSearch', methods=['GET'])
 def callSearch():
     query = request.args.get("query","No Query")

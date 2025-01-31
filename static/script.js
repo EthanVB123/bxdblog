@@ -1,7 +1,7 @@
 async function search() { // Perform a semantic search on the blog posts
     const query = document.getElementById('search-input').value;
     try {
-        const response = await fetch(`http://127.0.0.1:5000/callSearch?query=${encodeURIComponent(query)}`);
+        const response = await fetch(`/callSearch?query=${encodeURIComponent(query)}`);
         const resultJSON = await response.json();
         console.log("Output from Python:", resultJSON);
         renderSearchResults(resultJSON.result); // Render the search results using the existing renderSearchResults function
@@ -85,7 +85,7 @@ function renderSearchResults(searchResults) {
     for (let i = 0; i < searchResults.length; i++) {
         const result = searchResults[i];
         const [title, distance, url] = result; // Destructure the tuple to get title and distance
-        createBlogPost(title, 'comingsoon.jpg', url, distance);
+        createBlogPost(title, 'static/images/comingsoon.jpg', url, distance);
     }
 }
 
