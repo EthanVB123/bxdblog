@@ -14,6 +14,6 @@ The following python packages:
 
 Use the following command to run the server:
 ```
-flask --app semanticSearch.py run   
+python semanticSearch.py  
 ```
-
+The server will run on port 5000. It is currently configured to run on all interfaces, so it will be accessible from any device on the same network, but not from the internet.

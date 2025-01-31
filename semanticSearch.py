@@ -62,7 +62,7 @@ def callSearch():
     #print("RESULT: "+str(result))
     return jsonify({"result": result})
 
-##if __name__ == "__main__": # if this is the file that is running, and not a module
-##    print("server running!")
-##    app.run(debug=True)
+if __name__ == "__main__": # if this is the file that is running, and not a module
+    print("server running!")
+    app.run(host='0.0.0.0', port=5000)
 
