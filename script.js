@@ -47,6 +47,23 @@ function createBlogPost(title, imageUrl, postUrl, distance = undefined) {
         const distanceElement = document.createElement('p');
         distanceElement.className = 'distance';
         distanceElement.style.fontSize = 'small';
+        
+        // Calculate color based on distance
+        let color;
+        if (distance <= 1) {
+            color = '#006400'; // Dark green
+        } else if (distance >= 2) {
+            color = '#8B0000'; // Dark red
+        } else {
+            // Linear interpolation between colors for values between 1 and 2
+            const t = (distance - 1) / (2 - 1); // Normalize to 0-1
+            const r = Math.round(0 * (1 - t) + 139 * t);
+            const g = Math.round(100 * (1 - t) + 0 * t);
+            const b = Math.round(0 * (1 - t) + 0 * t);
+            color = `rgb(${r}, ${g}, 0)`;
+        }
+        
+        distanceElement.style.color = color;
         distanceElement.textContent = `distance: ${distance}`;
         blogPost.appendChild(distanceElement);
     }
@@ -67,13 +84,11 @@ function renderSearchResults(searchResults) {
     console.log("Search Results:", searchResults);
     for (let i = 0; i < searchResults.length; i++) {
         const result = searchResults[i];
-        const [title, distance] = result; // Destructure the tuple to get title and distance
-        createBlogPost(title, 'comingsoon.jpg', 'https://google.com', distance);
+        const [title, distance, url] = result; // Destructure the tuple to get title and distance
+        createBlogPost(title, 'comingsoon.jpg', url, distance);
     }
 }
 
 
-createBlogPost('First Blog Post', 'comingsoon.jpg', 'https://google.com');
-createBlogPost('Second Blog Post', 'comingsoon.jpg', 'https://google.com'); 
-createBlogPost('Third Blog Post', 'comingsoon.jpg', 'https://google.com');
+search();
 
