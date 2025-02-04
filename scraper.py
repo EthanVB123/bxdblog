@@ -4,8 +4,23 @@ import time
 import re
 target_url = "https://www.businessxdesign.com.au/blog"
 post_prefix = "https://www.businessxdesign.com.au/"
+
+class BlogPost:
+    def __init__(self, title, text, image_url, url):
+        self.title = title
+        self.text = text
+        self.image_url = image_url
+        self.url = url
+
+    def __str__(self):
+        return f"Title: {self.title}\nText Length: {len(self.text)}\nImage URL: {self.image_url}\nURL: {self.url}"
+
+blogposts = []
+
 def read_site(url, printText=False, log=False):
     if log:
+
+
         print(f"Reading from {url}")
 
     try:
@@ -45,4 +60,8 @@ for post in href_values:
         print(blog_image["src"]) #the image url
     print(url) #the link to the post
 
+    blogposts.append(BlogPost(soup.h2.text.encode("latin1").decode("utf-8"), soup.find("div", class_="rich-text").get_text(separator="\n").encode("latin1").decode("utf-8"), blog_image["src"], url))
+
     
+print(len(blogposts))
+print(blogposts[0])
