@@ -28,20 +28,21 @@ href_values = list(set(href_values)) # to remove duplicates
 
 # at this point, href_values stores a link to every blog post
 
-#href_values_test = href_values[:2] #as not to overload the system
+#href_values_test = href_values[:2] #as not to overload the system when testing
 
 # following finds all blog post names
 for post in href_values:
+
     url = post_prefix + post
     soup = BeautifulSoup(read_site(url), "html.parser")
     #print(soup.get_text())
 
     
-    print(soup.h2.string.replace("â","'")) #the titles
-    print(url) #the links
+    print(soup.h2.text.encode("latin1").decode("utf-8")) #the titles
+    print(soup.find("div", class_="rich-text").get_text(separator="\n").encode("latin1").decode("utf-8")) #the text
+    blog_image = soup.find("div", class_="blog-image-wrapper").find("img")
+    if blog_image:
+        print(blog_image["src"]) #the image url
+    print(url) #the link to the post
 
-    #image_elements = soup.find_all('img', class_ = "image-cover")
-    #image_urls = [img['src'] for img in image_elements]
-    #print(image_urls)
-    #print(soup.img["src"])
     
