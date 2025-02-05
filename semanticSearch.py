@@ -32,7 +32,7 @@ faiss.write_index(index, "faiss_index")
 def search(query, top_k=len(blogTitles)):
     query_embedding = model.encode([query], convert_to_numpy=True)
     distances, indices = index.search(query_embedding, top_k)
-    results = [(blogTitles[i], distances[0][j], blogposts[i]['url']) for j, i in enumerate(indices[0])]
+    results = [{**blogposts[i], 'similarity': float(distances[0][j])} for j, i in enumerate(indices[0])]
     return results
 
 # Example search
@@ -52,8 +52,8 @@ def callSearch():
     query = request.args.get("query","No Query")
     result = search(query)
 
-    for index in range(len(result)):
-        result[index] = (result[index][0], float(result[index][1]), result[index][2])
+    #for index in range(len(result)):
+    #    result[index] = (result[index][0], float(result[index][1]), result[index][2])
     #print("RESULT: "+str(result))
     return jsonify({"result": result})
 

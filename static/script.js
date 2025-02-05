@@ -22,41 +22,41 @@ document.getElementById('search-input').addEventListener('keydown', function(eve
     }
 });
 
-function createBlogPost(title, imageUrl, postUrl, distance = undefined) {
+function createBlogPost(post) {
     // Create main container
     const blogPost = document.createElement('div');
     blogPost.className = 'blog-post';
-    blogPost.onclick = () => window.location.href = postUrl;
+    blogPost.onclick = () => window.location.href = post.url;
 
     // Create and set up image
     const img = document.createElement('img');
-    img.src = imageUrl;
+    img.src = post.image_url;
     img.alt = 'Blog post thumbnail';
 
     // Create and set up title
     const titleElement = document.createElement('h2');
     titleElement.className = 'post-title';
-    titleElement.textContent = title;
+    titleElement.textContent = post.title;
 
     // Assemble the blog post
     blogPost.appendChild(img);
     blogPost.appendChild(titleElement);
 
-    // Add distance if specified
-    if (distance !== undefined) {
+    // Add similarity score
+    if (post.similarity !== undefined) {
         const distanceElement = document.createElement('p');
         distanceElement.className = 'distance';
         distanceElement.style.fontSize = 'small';
         
-        // Calculate color based on distance
+        // Calculate color based on similarity
         let color;
-        if (distance <= 1) {
+        if (post.similarity <= 1) {
             color = '#006400'; // Dark green
-        } else if (distance >= 2) {
+        } else if (post.similarity >= 2) {
             color = '#8B0000'; // Dark red
         } else {
             // Linear interpolation between colors for values between 1 and 2
-            const t = (distance - 1) / (2 - 1); // Normalize to 0-1
+            const t = (post.similarity - 1) / (2 - 1); // Normalize to 0-1
             const r = Math.round(0 * (1 - t) + 139 * t);
             const g = Math.round(100 * (1 - t) + 0 * t);
             const b = Math.round(0 * (1 - t) + 0 * t);
@@ -64,7 +64,7 @@ function createBlogPost(title, imageUrl, postUrl, distance = undefined) {
         }
         
         distanceElement.style.color = color;
-        distanceElement.textContent = `distance: ${distance}`;
+        distanceElement.textContent = `distance: ${post.similarity}`;
         blogPost.appendChild(distanceElement);
     }
 
@@ -84,8 +84,7 @@ function renderSearchResults(searchResults) {
     console.log("Search Results:", searchResults);
     for (let i = 0; i < searchResults.length; i++) {
         const result = searchResults[i];
-        const [title, distance, url] = result; // Destructure the tuple to get title and distance
-        createBlogPost(title, 'static/images/comingsoon.jpg', url, distance);
+        createBlogPost(result);
     }
 }
 
