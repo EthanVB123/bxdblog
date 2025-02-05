@@ -53,15 +53,20 @@ for post in href_values:
     #print(soup.get_text())
 
     
-    print(soup.h2.text.encode("latin1").decode("utf-8")) #the titles
-    print(soup.find("div", class_="rich-text").get_text(separator="\n").encode("latin1").decode("utf-8")) #the text
+    #print(soup.h2.text.encode("latin1").decode("utf-8")) #the titles
+    #print(soup.find("div", class_="rich-text").get_text(separator="\n").encode("latin1").decode("utf-8")) #the text
     blog_image = soup.find("div", class_="blog-image-wrapper").find("img")
-    if blog_image:
-        print(blog_image["src"]) #the image url
-    print(url) #the link to the post
+    #if blog_image:
+    #    print(blog_image["src"]) #the image url
+    #print(url) #the link to the post
 
     blogposts.append(BlogPost(soup.h2.text.encode("latin1").decode("utf-8"), soup.find("div", class_="rich-text").get_text(separator="\n").encode("latin1").decode("utf-8"), blog_image["src"], url))
 
     
-print(len(blogposts))
-print(blogposts[0])
+#print(len(blogposts))
+#print(blogposts[0])
+
+def get_blogposts_as_json():
+    return [post.__dict__ for post in blogposts]
+
+print(get_blogposts_as_json())

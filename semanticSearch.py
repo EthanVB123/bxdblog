@@ -4,20 +4,15 @@ from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
 from flask import Flask, jsonify, request, render_template
-
+from scraper import get_blogposts_as_json # this is scraper.py not an external module
 # start flask app
 app = Flask(__name__)
 # Load the model
 model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
-datafile = "blogTitlesAndLinks.txt" #note this is hand-cleaned
-
-blogPosts = {} # title : url
-with open(datafile, "r") as blogs:
-    text = blogs.read().splitlines()
-    for i in range(0, len(text), 2):
-        blogPosts[text[i]] = text[i+1]
-blogTitles = list(blogPosts)
+# Load the blogposts TODO store the blogposts in a file and load from there, no need to scrape every time, scrape if last modified was not today
+blogposts = get_blogposts_as_json()
+blogTitles = [post['title'] for post in blogposts]
 
 #Create embeddings
 embeddings = model.encode(blogTitles, convert_to_numpy=True)
@@ -37,7 +32,7 @@ faiss.write_index(index, "faiss_index")
 def search(query, top_k=len(blogTitles)):
     query_embedding = model.encode([query], convert_to_numpy=True)
     distances, indices = index.search(query_embedding, top_k)
-    results = [(blogTitles[i], distances[0][j], blogPosts[blogTitles[i]]) for j, i in enumerate(indices[0])]
+    results = [(blogTitles[i], distances[0][j], blogposts[i]['url']) for j, i in enumerate(indices[0])]
     return results
 
 # Example search
