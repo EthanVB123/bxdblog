@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import re
+import json
 target_url = "https://www.businessxdesign.com.au/blog"
 post_prefix = "https://www.businessxdesign.com.au/"
 
@@ -67,6 +68,9 @@ for post in href_values:
 #print(blogposts[0])
 
 def get_blogposts_as_json():
+    
+    with open('blogposts.json', 'w', encoding='utf-8') as f:
+        json.dump([post.__dict__ for post in blogposts], f, indent=4)
     return [post.__dict__ for post in blogposts]
 
-print(get_blogposts_as_json())
+#print(get_blogposts_as_json())
