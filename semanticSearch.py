@@ -52,7 +52,7 @@ def search(query, top_k=len(blogTitles)):
 # Example search
 query = "manage work life balance"
 results = search(query)
-print("Search Results:", results)
+#print("Search Results:", results)
 
 
 # Load the homepage
