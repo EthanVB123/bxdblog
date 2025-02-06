@@ -38,10 +38,21 @@ function createBlogPost(post) {
     titleElement.className = 'post-title';
     titleElement.textContent = post.title;
 
+    // Create and set up preview text
+    const previewElement = document.createElement('p');
+    previewElement.className = 'post-preview';
+    previewElement.style.fontSize = 'small';
+    
+    // Get first sentence or first 30 words
+    let previewText = post.text.split('.')[0];
+    if (previewText.split(' ').length > 30) {
+        previewText = previewText.split(' ').slice(0, 30).join(' ');
+    }
+    previewElement.textContent = previewText + '...';
     // Assemble the blog post
-    blogPost.appendChild(img);
     blogPost.appendChild(titleElement);
-
+    blogPost.appendChild(img);
+    blogPost.appendChild(previewElement);
     // Add similarity score
     if (post.similarity !== undefined) {
         const distanceElement = document.createElement('p');

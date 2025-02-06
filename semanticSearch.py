@@ -8,17 +8,31 @@ from scraper import get_blogposts_as_json # this is scraper.py not an external m
 # start flask app
 app = Flask(__name__)
 # Load the model
-model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+model = SentenceTransformer('sentence-transformers/all-MPNet-base-v2')
 
 # Load the blogposts TODO store the blogposts in a file and load from there, no need to scrape every time, scrape if last modified was not today
 blogposts = get_blogposts_as_json()
 blogTitles = [post['title'] for post in blogposts]
 
 #Create embeddings
-embeddings = model.encode(blogTitles, convert_to_numpy=True)
+#embeddings = model.encode(blogTitles, convert_to_numpy=True)
+
+def encode(post, titleWeight=1): # Encode post including title and text
+    textSentences = post['text'].split('\n')
+    titleSentence = post['title']
+    titleEmbedding = model.encode([titleSentence], convert_to_numpy=True)
+    textEmbeddings = model.encode(textSentences, convert_to_numpy=True)
+    textMean = np.mean(textEmbeddings, axis=0)
+    sentenceEmbedding = np.mean([textMean, titleEmbedding[0]], axis=0)
+
+    return sentenceEmbedding
+
+embeddings = np.array([encode(post) for post in blogposts])
 
 # Save embeddings to disk (optional)
 np.save("blog_embeddings.npy", embeddings)
+
+
 
 # Initialize FAISS index
 dimension = embeddings.shape[1]  # Embedding size
