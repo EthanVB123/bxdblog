@@ -50,34 +50,38 @@ function createBlogPost(post) {
     }
     previewElement.textContent = previewText + '...';
     // Assemble the blog post
-    blogPost.appendChild(titleElement);
+
     blogPost.appendChild(img);
-    blogPost.appendChild(previewElement);
+    const textContainer = document.createElement('div');
+    textContainer.className = 'text-container';
+    textContainer.appendChild(titleElement);
+    textContainer.appendChild(previewElement);
+    blogPost.appendChild(textContainer);
     // Add similarity score
-    if (post.similarity !== undefined) {
-        const distanceElement = document.createElement('p');
-        distanceElement.className = 'distance';
-        distanceElement.style.fontSize = 'small';
+    // if (post.similarity !== undefined) {
+    //     const distanceElement = document.createElement('p');
+    //     distanceElement.className = 'distance';
+    //     distanceElement.style.fontSize = 'small';
         
-        // Calculate color based on similarity
-        let color;
-        if (post.similarity <= 1) {
-            color = '#006400'; // Dark green
-        } else if (post.similarity >= 2) {
-            color = '#8B0000'; // Dark red
-        } else {
-            // Linear interpolation between colors for values between 1 and 2
-            const t = (post.similarity - 1) / (2 - 1); // Normalize to 0-1
-            const r = Math.round(0 * (1 - t) + 139 * t);
-            const g = Math.round(100 * (1 - t) + 0 * t);
-            const b = Math.round(0 * (1 - t) + 0 * t);
-            color = `rgb(${r}, ${g}, 0)`;
-        }
+    //     // Calculate color based on similarity
+    //     let color;
+    //     if (post.similarity <= 1) {
+    //         color = '#006400'; // Dark green
+    //     } else if (post.similarity >= 2) {
+    //         color = '#8B0000'; // Dark red
+    //     } else {
+    //         // Linear interpolation between colors for values between 1 and 2
+    //         const t = (post.similarity - 1) / (2 - 1); // Normalize to 0-1
+    //         const r = Math.round(0 * (1 - t) + 139 * t);
+    //         const g = Math.round(100 * (1 - t) + 0 * t);
+    //         const b = Math.round(0 * (1 - t) + 0 * t);
+    //         color = `rgb(${r}, ${g}, 0)`;
+    //     }
         
-        distanceElement.style.color = color;
-        distanceElement.textContent = `distance: ${post.similarity}`;
-        blogPost.appendChild(distanceElement);
-    }
+    //     distanceElement.style.color = color;
+    //     distanceElement.textContent = `distance: ${post.similarity}`;
+    //     blogPost.appendChild(distanceElement);
+    // }
 
     // Add to results container
     const resultsContainer = document.getElementById('results');
