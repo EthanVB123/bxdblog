@@ -25,6 +25,18 @@ blogposts = [] # placeholder so that the code runs, is defined later right befor
 
 #        blogposts = json.load(f)
     
+def files_up_to_date():
+    if not os.path.exists('blogposts.json') or os.path.getmtime('blogposts.json') < time.time() - 86400:
+        return False
+    elif not os.path.exists('blog_embeddings.npy') or os.path.getmtime('blog_embeddings.npy') < time.time() - 86400:
+        return False
+    elif not os.path.exists('faiss_index') or os.path.getmtime('faiss_index') < time.time() - 86400:
+        return False
+    else:
+        return True
+
+
+
 # Reloads blogposts, embeddings and index - to be called on startup if blogposts.json more than 12 hours old, or if query is made and there are new blogposts
 def load_embeddings():
     # Scrape blogposts from the blog
@@ -77,8 +89,16 @@ def callSearch():
 
 if __name__ == "__main__": # if this is the file that is running, and not a module
     print("server running!")
-    blogposts, embeddings, index = load_embeddings() # currently runs every restart, should be called only if blogposts.json is more than 12 hours old, or if query is made and there are new blogposts
+    if files_up_to_date():
+        print("Files are up to date")
+        blogposts = json.load(open('blogposts.json'))
+        embeddings = np.load('blog_embeddings.npy')
+        index = faiss.read_index('faiss_index')
+    else:
+        print("Loading files")
+        blogposts, embeddings, index = load_embeddings() # currently runs every restart, should be called only if blogposts.json is more than 12 hours old, or if query is made and there are new blogposts
     print("Blogposts: "+str(blogposts))
     print("Blogposts Length: "+str(len(blogposts)))
     app.run(host='0.0.0.0', port=5000)
+
 
