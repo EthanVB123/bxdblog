@@ -46,7 +46,7 @@ href_values = list(set(href_values)) # to remove duplicates
 
 #href_values_test = href_values[:2] #as not to overload the system when testing
 
-# following finds all blog post names
+# following finds all blog posts
 for post in href_values:
 
     url = post_prefix + post

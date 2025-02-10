@@ -21,3 +21,5 @@ The server will run on port 5000. It is currently configured to run on all inter
 If more blog posts are added, simply restart the server to redo the web scraping and embedding. Currently, server takes a while (~20 seconds) to restart, even if no new blog posts are added, working on that!
 
 Note - comingsoon.jpg is not being used, but is retained in case we need it again in the future.
+
+The NLP model used is all-MPNet-base-v2, which is licensed under the Apache License 2.0. See the file apache_license.txt for details.
