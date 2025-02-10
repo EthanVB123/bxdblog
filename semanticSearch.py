@@ -95,7 +95,7 @@ def home():
 # Used by frontend to call search
 @app.route('/callSearch', methods=['GET'])
 def callSearch():
-    # the following if block checks if the files are up to date and updates, hence eliminating the need to restart the server upon new blogposts
+    # the following if block checks if the files are up to date and updates if not, hence eliminating the need to restart the server upon new blogposts
     # however, takes ~0.5s per query, so if you don't think it is worth it, remove it
     if not files_up_to_date():
         print("Files are not up to date")
@@ -114,9 +114,7 @@ if __name__ == "__main__": # if this is the file that is running, and not a modu
         index = faiss.read_index('faiss_index')
     else:
         print("Loading files")
-        blogposts, embeddings, index = load_embeddings() # currently runs every restart, should be called only if blogposts.json is more than 12 hours old, or if query is made and there are new blogposts
-    #print("Blogposts: "+str(blogposts))
-    #print("Blogposts Length: "+str(len(blogposts)))
+        blogposts, embeddings, index = load_embeddings() 
     app.run(host='0.0.0.0', port=5000)
 
 
