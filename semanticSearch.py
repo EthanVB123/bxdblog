@@ -90,9 +90,15 @@ def home():
 # Used by frontend to call search
 @app.route('/callSearch', methods=['GET'])
 def callSearch():
+    # the following if block checks if the files are up to date and updates, hence eliminating the need to restart the server upon new blogposts
+    # however, takes ~0.5s per query, so if you don't think it is worth it, remove it
+    if not files_up_to_date():
+        print("Files are not up to date")
+        blogposts, embeddings, index = load_embeddings()
     query = request.args.get("query","No Query")
     result = search(query)
     return jsonify({"result": result})
+
 
 if __name__ == "__main__": # if this is the file that is running, and not a module
     print("server running!")
