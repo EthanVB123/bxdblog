@@ -22,4 +22,4 @@ If more blog posts are added, simply restart the server to redo the web scraping
 
 Note - comingsoon.jpg is not being used, but is retained in case we need it again in the future.
 
-The NLP model used is all-MPNet-base-v2, which is licensed under the Apache License 2.0. See the file apache_license.txt for details.
+The NLP model used is BAAI/bge-large-en-v1.5, which is licensed under the MIT License. See the file mit_license.txt for details.
