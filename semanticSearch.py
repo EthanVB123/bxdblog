@@ -4,7 +4,7 @@ from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
 from flask import Flask, jsonify, request, render_template
-from scraper import get_blogposts_as_json # this is scraper.py not an external module
+from scraper import get_blogposts_as_json, areBlogpostsUpToDate # this is scraper.py not an external module
 import json
 import os
 import time
@@ -27,13 +27,20 @@ blogposts = [] # placeholder so that the code runs, is defined later right befor
     
 def files_up_to_date():
     if not os.path.exists('blogposts.json') or os.path.getmtime('blogposts.json') < time.time() - 86400:
+        print("blogposts.json is more than 1 day old")
         return False
     elif not os.path.exists('blog_embeddings.npy') or os.path.getmtime('blog_embeddings.npy') < time.time() - 86400:
+        print("blog_embeddings.npy is more than 1 day old")
         return False
     elif not os.path.exists('faiss_index') or os.path.getmtime('faiss_index') < time.time() - 86400:
+        print("faiss_index is more than 1 day old")
+        return False
+    elif not areBlogpostsUpToDate():
+        print("blogposts are not up to date")
         return False
     else:
         return True
+
 
 
 
@@ -97,8 +104,8 @@ if __name__ == "__main__": # if this is the file that is running, and not a modu
     else:
         print("Loading files")
         blogposts, embeddings, index = load_embeddings() # currently runs every restart, should be called only if blogposts.json is more than 12 hours old, or if query is made and there are new blogposts
-    print("Blogposts: "+str(blogposts))
-    print("Blogposts Length: "+str(len(blogposts)))
+    #print("Blogposts: "+str(blogposts))
+    #print("Blogposts Length: "+str(len(blogposts)))
     app.run(host='0.0.0.0', port=5000)
 
 
