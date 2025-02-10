@@ -67,7 +67,8 @@ def encode(post): # Encode post including title and text, with title having the 
     titleEmbedding = model.encode([titleSentence], convert_to_numpy=True)
     textEmbeddings = model.encode(textSentences, convert_to_numpy=True)
     textMean = np.mean(textEmbeddings, axis=0)
-    sentenceEmbedding = np.mean([textMean, titleEmbedding[0]], axis=0)
+    k = 0.3  # Weight for title embedding
+    sentenceEmbedding = (textMean + k * titleEmbedding[0]) / (1 + k)
     return sentenceEmbedding
 
 # Search functionality, query is the (string) search query, top_k is the number of results to return (default is all)
