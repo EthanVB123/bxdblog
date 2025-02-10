@@ -11,7 +11,8 @@ import time
 # start flask app
 app = Flask(__name__)
 # Load the model
-model = SentenceTransformer('sentence-transformers/all-MPNet-base-v2')
+# model = SentenceTransformer('sentence-transformers/all-MPNet-base-v2') old model
+model = SentenceTransformer('BAAI/bge-large-en-v1.5')
 
 
 # Load the blogposts TODO store the blogposts in a file and load from there, no need to scrape every time, scrape if last modified was not today
@@ -54,7 +55,7 @@ def load_embeddings():
     np.save("blog_embeddings.npy", embeddings)
 
     # Create FAISS index to allow for efficient search and save it to faiss_index
-    index = faiss.IndexFlatL2(embeddings.shape[1]) #brute force search by Euclidean distance is sufficient considering the small number of blogposts
+    index = faiss.IndexFlatIP(embeddings.shape[1]) #brute force search by Euclidean distance is sufficient considering the small number of blogposts
     index.add(embeddings)
     faiss.write_index(index, "faiss_index")
 
@@ -64,8 +65,8 @@ def load_embeddings():
 def encode(post): # Encode post including title and text, with title having the same weight as all the text combined
     textSentences = post['text'].split('\n')
     titleSentence = post['title']
-    titleEmbedding = model.encode([titleSentence], convert_to_numpy=True)
-    textEmbeddings = model.encode(textSentences, convert_to_numpy=True)
+    titleEmbedding = model.encode([titleSentence], batch_size=8, convert_to_numpy=True) # batch size 8 is required on my machine with only 4GB VRAM
+    textEmbeddings = model.encode(textSentences, batch_size=8, convert_to_numpy=True)
     textMean = np.mean(textEmbeddings, axis=0)
     k = 0.3  # Weight for title embedding
     sentenceEmbedding = (textMean + k * titleEmbedding[0]) / (1 + k)
@@ -78,9 +79,12 @@ def search(query, top_k=0): # top_k = 0 means all results
         top_k = len(blogposts)
     else:
         top_k = int(top_k) #just in case - it must always be an integer
+    print(f"Document embeddings dimension: {embeddings.shape[1]}")
+    print(f"Query embedding dimension: {query_embedding.shape[0]}")
     distances, indices = index.search(query_embedding, top_k)
     results = [{**blogposts[i], 'similarity': float(distances[0][j])} for j, i in enumerate(indices[0])]
     return results
+
 
 
 # Load the homepage
