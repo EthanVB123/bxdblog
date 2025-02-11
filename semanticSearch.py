@@ -27,13 +27,13 @@ blogposts = [] # placeholder so that the code runs, is defined later right befor
 #        blogposts = json.load(f)
     
 def files_up_to_date():
-    if not os.path.exists('blogposts.json') or os.path.getmtime('blogposts.json') < time.time() - 86400:
+    if not os.path.exists('blogposts.json') or os.path.getmtime('blogposts.json') < time.time() - 86400*7:
         print("blogposts.json is more than 1 day old")
         return False
-    elif not os.path.exists('blog_embeddings.npy') or os.path.getmtime('blog_embeddings.npy') < time.time() - 86400:
+    elif not os.path.exists('blog_embeddings.npy') or os.path.getmtime('blog_embeddings.npy') < time.time() - 86400*7:
         print("blog_embeddings.npy is more than 1 day old")
         return False
-    elif not os.path.exists('faiss_index') or os.path.getmtime('faiss_index') < time.time() - 86400:
+    elif not os.path.exists('faiss_index') or os.path.getmtime('faiss_index') < time.time() - 86400*7:
         print("faiss_index is more than 1 day old")
         return False
     elif not areBlogpostsUpToDate():
